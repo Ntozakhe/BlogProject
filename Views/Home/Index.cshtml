@@ -1,0 +1,166 @@
+﻿@model IPagedList<BlogProjectPrac7.Models.Post>
+@using BlogProjectPrac7.Models
+@using BlogProjectPrac7.Services
+@using BlogProjectPrac7.Enums
+@using BlogProjectPrac7.Services.Interfaces
+@using Microsoft.AspNetCore.Identity
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+
+
+@inject IImageService _imageService
+@inject UserManager<BlogUser> _userManager
+
+
+
+@* <div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
+            <div class="card border-dark">
+                <img class="card-img-top img-fluid" src="@_imageService.DecodeImage(item.ImageData!, item.ContentType!)" />
+                <div class="card-body text-center">
+
+                    <div class="bg-warning">
+                        <hr class="card-hr" />
+                        <h5 class="card-title">@item.Title</h5>
+                        <hr class="card-hr" />
+                    </div>
+                    <div>
+                        <p class="card-text cftooltip"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title=""
+                           data-original-title="@item.Abstract">
+                            @Html.Raw(item.Abstract)
+                        </p>
+                    </div>
+
+                    <br />
+                    <div class="text-center">
+                        <a class="btn btn-outline-dark w-100 mb-2" asp-action="Details" asp-controller="Posts" asp-route-slug="@item.Slug">
+                            Read more
+                        </a>
+                    </div>
+
+                 
+                    @if (User.IsInRole(nameof(BlogRole.Administrator)))
+                    {
+                        <div class="text-center">
+                            <a class="btn btn-outline-dark btn-sm w-100 mb-2" asp-action="Edit" asp-controller="Posts" asp-route-id="@item.Id">Edit Post</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div> *@
+
+<div class="container">
+    <div class="row">
+        <!-- Blog entries-->
+        <div class="col-lg-8">
+           
+            <!-- Nested row for non-featured blog posts-->
+            <div class="row">
+                    @foreach (var item in Model)
+                {
+                    <div class="col-lg-6 mb-3 ">
+                        <!-- Blog post-->
+
+                        <div class="card h-100">
+                            <img class="card-img-top img-fluid" src="@_imageService.DecodeImage(item.ImageData!, item.ContentType!)" />
+                            <div class="card-body">
+                                <div class="small text-muted">@item.Created.ToString("MMMM dd"), @item.Created.ToString("yyyy")</div>
+                                <h2 class="card-title h4">@item.Title</h2>
+                                <p class="card-text">@item.Abstract</p>
+                                <div class="card-footer mx-auto">
+                                    <a class="btn btn-primary w-100" asp-action="Details" asp-controller="Posts" asp-route-slug="@item.Slug">Read more →</a>
+                                @if (User.IsInRole(nameof(BlogRole.Administrator)))
+                                {
+                                        <a class="btn btn-outline-warning w-100" asp-action="Edit" asp-controller="Posts" asp-route-id="@item.Id">Edit Post <i class="bi bi-pencil-fill"></i></a>
+                                }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            
+        </div>
+        <!-- Side widgets-->
+        <div class="col-lg-4">
+           
+            <!-- Categories widget-->
+            @* <div class="card mb-4">
+                <div class="card-header">Categories</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+
+                            <select name="CategoryIds" class="form-control" asp-items="ViewBag.CategoryIds">
+                                <option>All</option>
+                                    </select>
+
+                                
+                        </div>
+                    </div>
+                </div>
+            </div> *@
+            <!-- Side widget-->
+            <div class="card mb-4">
+                <div class="card-header">About Me</div>
+                <img src="/img/LINKEDIN_PROPIC-removebg-preview (1).png" alt="Abou Me" class="mr-3 mt-3 rounded-pill img-thumbnail " style="width:60px;">
+                <div class="d-flex justify-content-center">
+                    <h4>Kenny Ntozakhe</h4>
+                </div>
+
+                <div class="card-body bg-light">I’ve always been a great problem solver, inquisitive about how things work. Today, I’m a web developer and have built several projects that I invite you to explore. These projects demonstrate the type of skills I have acquired and what I can bring to your project.</div>
+                <div class="card-footer d-flex justify-content-center bg-white">
+                    <a class="btn btn-outline-warning rounded-pill" href="https://kenny-ntozakhe.netlify.app/" target="_blank">Portfolio<i class="bi bi-person-bounding-box"></i></a>
+                    <a class="btn btn-primary rounded-pill" href="https://github.com/Ntozakhe/" target="_blank">GitHub<i class="bi bi-github"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<!--Add paging controls-->
+<div class="row">
+    <div class="col h3">
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }),
+                 new PagedListRenderOptions
+        {
+            LiElementClasses = new string[] { "page-item" },
+            PageClasses = new string[] { "page-link" }
+        })
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var swalMsg = '@TempData["SweetAlert"]'
+        if (swalMsg != "") {
+            swal.fire({
+                icon: 'success',
+                title: swalMsg,
+                timer: 2500
+            })
+        }
+
+        $(document).ready(function () {
+            $("p").tooltip();
+        });
+    </script>
+}
+
+

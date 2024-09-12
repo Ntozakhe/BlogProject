@@ -1,0 +1,103 @@
+﻿@using BlogProjectPrac7.Enums
+@model BlogProjectPrac7.Models.Post
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<div class="row justify-content-center">
+  
+    <div class="col-md-6">
+        <h4>New Blog Post</h4>
+        <hr />
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+           
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Abstract" class="control-label"></label>
+                <textarea asp-for="Abstract" class="form-control"></textarea>
+                <span asp-validation-for="Abstract" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <textarea asp-for="Content" class="form-control"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            @* //Tags *@
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label class="control-label">Manage Tags</label>
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col">
+                        <div class="row mb-2">
+                            <div class="col">
+                                <input type="text" class="form-control" id="TagEntry" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <button onclick="AddTag()" name="Add" type="button" class="btn btn-primary rounded-pill w-100">Add</button>
+                            </div>
+                            <div class="col">
+                                <button onclick="DeleteTag()" name="Delete" type="button" class="btn btn-primary rounded-pill w-100">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <select class="w-100" name="TagValues" id="TagList" multiple></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col">
+                    <label asp-for="Categories" class="control-label"></label>
+                    <select name="CategoryList" class="form-control" asp-items="ViewBag.CategoryList" multiple>
+                    </select>
+
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label asp-for="ReadyStatus" class="control-label"></label>
+                        <select asp-for="ReadyStatus" class="form-control"
+                                asp-items="@Html.GetEnumSelectList<ReadyStatus>()"></select>
+                        <span asp-validation-for="ReadyStatus" class="text-danger"></span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image" class="control-label"></label>
+                <input type="file" asp-for="Image" class="form-control" accept=".png,.jpg,.jpeg,.gif" />
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <button type="submit" class="btn btn-primary rounded-pill ">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+        //Default font size but not for placeholder...
+        $('#Content').summernote({
+            placeholder: "Post body"
+        });
+    </script>
+    <script src="~/js/Custom.js" asp-append-version="true"></script>
+}

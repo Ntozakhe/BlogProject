@@ -1,0 +1,86 @@
+﻿@model IPagedList<BlogProjectPrac7.Models.Post>
+@using BlogProjectPrac7.Models
+@using BlogProjectPrac7.Services
+@using BlogProjectPrac7.Enums
+@using BlogProjectPrac7.Services.Interfaces
+@using Microsoft.AspNetCore.Identity
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+
+
+@inject IImageService _imageService
+
+<div class="container">
+    <div class="row">
+        <!-- Blog entries-->
+        <div class="col-lg-12 col-md-10 mx-auto">
+
+            <!-- Nested row for non-featured blog posts-->
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-4 mb-3 ">
+                        <!-- Blog post-->
+
+                        <div class="card h-100">
+                            <img class="card-img-top img-fluid" src="@_imageService.DecodeImage(item.ImageData!, item.ContentType!)" />
+                            <div class="card-body">
+                                <div class="small text-muted">@item.Created.ToString("MMMM dd"), @item.Created.ToString("yyyy")</div>
+                                <h2 class="card-title h4">@item.Title</h2>
+                                <p class="card-text">@item.Abstract</p>
+                                <div class="card-footer mx-auto">
+                                    <a class="btn btn-primary w-100" asp-action="Details" asp-controller="Posts" asp-route-slug="@item.Slug">Read more →</a>
+                                    @if (User.IsInRole(nameof(BlogRole.Administrator)))
+                                    {
+                                        <a class="btn btn-outline-warning w-100" asp-action="Edit" asp-controller="Posts" asp-route-id="@item.Id">Edit Post <i class="bi bi-pencil-fill"></i></a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+        <!-- Side widgets-->
+    </div>
+</div>
+
+<hr />
+
+<!--Add paging controls-->
+<div class="row">
+    <div class="col h3">
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        @Html.PagedListPager(Model, page => Url.Action("SearchIndex", new { page = page, searchTerm = ViewData["SearchTerm"] }),
+                 new PagedListRenderOptions
+        {
+            LiElementClasses = new string[] { "page-item" },
+            PageClasses = new string[] { "page-link" }
+        })
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var swalMsg = '@TempData["SweetAlert"]'
+        if (swalMsg != "") {
+            swal.fire({
+                icon: 'success',
+                title: swalMsg,
+                timer: 2500
+            })
+        }
+
+        $(document).ready(function () {
+            $("p").tooltip();
+        });
+    </script>
+}
+
