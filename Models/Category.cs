@@ -12,6 +12,6 @@ namespace BlogProjectPrac7.Models
 
 
         //my child is:
-        public virtual ICollection<Post> Posts { get; set; } = new HashSet<Post>();
+        public virtual ICollection<Post>? Posts { get; set; } = new HashSet<Post>();
     }
 }
