@@ -14,14 +14,12 @@ namespace BlogProjectPrac7.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly IBlogEmailSender _emailSender;
-        private readonly IBlogService _blogService;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IBlogEmailSender emailSender, IBlogService blogService)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IBlogEmailSender emailSender)
         {
             _logger = logger;
             _context = context;
             _emailSender = emailSender;
-            _blogService = blogService;
         }
 
         public async Task<IActionResult> Index(int? page)

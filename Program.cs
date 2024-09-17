@@ -30,7 +30,6 @@ builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailS
 builder.Services.AddScoped<IBlogEmailSender, EmailService>();
 builder.Services.AddScoped<BlogSearchService>();
 builder.Services.AddScoped<ISlugService, BasicSlugService>();
-builder.Services.AddScoped<IBlogService, BlogService>();
 
 
 var app = builder.Build();

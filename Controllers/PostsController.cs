@@ -19,16 +19,16 @@ namespace BlogProjectPrac7.Controllers
         private readonly IImageService _imageService;
         private readonly UserManager<BlogUser> _userManager;
         private readonly BlogSearchService _blogSearchService;
-        private readonly IBlogService _blogService;
 
-        public PostsController(ApplicationDbContext context, ISlugService slugService, IImageService imageService, UserManager<BlogUser> userManager, BlogSearchService blogSearchService, IBlogService blogService)
+
+        public PostsController(ApplicationDbContext context, ISlugService slugService, IImageService imageService, UserManager<BlogUser> userManager, BlogSearchService blogSearchService)
         {
             _context = context;
             _slugService = slugService;
             _imageService = imageService;
             _userManager = userManager;
             _blogSearchService = blogSearchService;
-            _blogService = blogService;
+
         }
 
         public async Task<IActionResult> SearchIndex(int? page, string searchTerm)
@@ -92,7 +92,6 @@ namespace BlogProjectPrac7.Controllers
         [Authorize(Roles = nameof(BlogRole.Administrator))]
         public async Task<IActionResult> Create()
         {
-            ViewData["CategoryList"] = new MultiSelectList(await _blogService.GetCategoryListAsync(), "Id", "Name");
             ViewData["HeaderImage"] = Url.Content("~/img/home-bg.jpg");
             return View();
         }
@@ -103,7 +102,7 @@ namespace BlogProjectPrac7.Controllers
         [Authorize(Roles = nameof(BlogRole.Administrator))]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Abstract,Content,ReadyStatus,Image")] Post post, List<int> CategoryList, List<string> tagValues)
+        public async Task<IActionResult> Create([Bind("Title,Abstract,Content,ReadyStatus,Image")] Post post, List<string> tagValues)
         {
             if (ModelState.IsValid)
             {
@@ -132,10 +131,7 @@ namespace BlogProjectPrac7.Controllers
                 _context.Add(post);
                 await _context.SaveChangesAsync();
 
-                foreach (int categoryId in CategoryList)
-                {
-                    await _blogService.AddPostToCategoryAsync(categoryId, post.Id);
-                }
+
 
                 //How do i loop over the incoming list of strings
                 foreach (var tagText in tagValues)
@@ -171,7 +167,6 @@ namespace BlogProjectPrac7.Controllers
             }
             ViewData["HeaderImage"] = _imageService.DecodeImage(post.ImageData!, post.ContentType!);
             ViewData["MainText"] = "Edit in progress...";
-            ViewData["CategoryList"] = new MultiSelectList(await _blogService.GetCategoryListAsync(), "Id", "Name", await _blogService.GetPostCategoryIdsAsync(post.Id));
             ViewData["TagValues"] = string.Join(",", post.Tags.Select(t => t.Text));
             return View(post);
         }
@@ -182,7 +177,7 @@ namespace BlogProjectPrac7.Controllers
         [Authorize(Roles = nameof(BlogRole.Administrator))]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Created,Title,Abstract,Content,ReadyStatus")] Post post, IFormFile? newImage, List<string> tagValues, List<int> CategoryList)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Created,Title,Abstract,Content,ReadyStatus")] Post post, IFormFile? newImage, List<string> tagValues)
         {
             if (id != post.Id)
             {
@@ -238,17 +233,8 @@ namespace BlogProjectPrac7.Controllers
                     }
 
                     await _context.SaveChangesAsync();
-                    //remove the previously selected category
-                    List<Category> oldCategories = (await _blogService.GetPostCategoriesAsync(post.Id)).ToList();
-                    foreach (var category in oldCategories)
-                    {
-                        await _blogService.RemovePostFromCategoryAsync(category.Id, post.Id);
-                    }
-                    //readd the category
-                    foreach (int categoryId in CategoryList)
-                    {
-                        await _blogService.AddPostToCategoryAsync(categoryId, post.Id);
-                    }
+
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -52,6 +52,5 @@ namespace BlogProjectPrac7.Models
         //my child is:
         public virtual ICollection<Comment>? Comments { get; set; } = new HashSet<Comment>();
         public virtual ICollection<Tag>? Tags { get; set; } = new HashSet<Tag>();
-        public virtual ICollection<Category>? Categories { get; set; } = new HashSet<Category>();
     }
 }
