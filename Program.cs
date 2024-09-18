@@ -34,7 +34,10 @@ builder.Services.AddScoped<ISlugService, BasicSlugService>();
 
 var app = builder.Build();
 
-
+if (!app.Environment.IsDevelopment())
+{
+    await Task.Delay(1000 * 30);
+}
 // Resolve DataService and run initialization ManageDataAsync()
 using (var scope = app.Services.CreateScope())
 {
