@@ -41,7 +41,7 @@ using (var scope = app.Services.CreateScope())
     //DataService
     var serviceProvider = scope.ServiceProvider;
     var dataService = serviceProvider.GetRequiredService<DataService>();
-    // await dataService.ManageDataAsync();
+    await dataService.ManageDataAsync();
     await DataHelper.ManageDataAsync(scope.ServiceProvider);
 }
 
