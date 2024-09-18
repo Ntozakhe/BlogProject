@@ -3,7 +3,7 @@
 @inject UserManager<BlogUser> UserManager
 
 @{
-    BlogUser? appUser = await UserManager.GetUserAsync(User);
+    BlogUser appUser = await UserManager.GetUserAsync(User);
 }
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
