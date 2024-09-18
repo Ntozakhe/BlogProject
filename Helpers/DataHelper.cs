@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlogProjectPrac7.Helpers
 {
-    public class DataHelper
+    public static class DataHelper
     {
         public static async Task ManageDataAsync(IServiceProvider svcProvider)
         {
