@@ -13,7 +13,9 @@ namespace BlogProjectPrac7.Services
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<BlogUser> _userManager;
 
-        public DataService(ApplicationDbContext dbcontext, RoleManager<IdentityRole> roleManager, UserManager<BlogUser> userManager)
+        public DataService(ApplicationDbContext dbcontext,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<BlogUser> userManager)
         {
             _dbcontext = dbcontext;
             _roleManager = roleManager;
