@@ -2,7 +2,6 @@
 using BlogProjectPrac7.Enums;
 using BlogProjectPrac7.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace BlogProjectPrac7.Services
 {
@@ -25,7 +24,7 @@ namespace BlogProjectPrac7.Services
         public async Task ManageDataAsync()
         {
             //Task: Create the DB from the current Migrations
-            await _dbcontext.Database.MigrateAsync();
+            //    await _dbcontext.Database.MigrateAsync();
 
             //Task 1: Seed a few Roles into the system
             await SeedRolesAsync();
