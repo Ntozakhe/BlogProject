@@ -5,7 +5,7 @@
 namespace BlogProjectPrac7.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class RestoreDataService : Migration
+    public partial class restoreDS : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BlogProjectPrac7.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240918180111_RestoreDataService")]
-    partial class RestoreDataService
+    [Migration("20240918181332_restoreDS")]
+    partial class restoreDS
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
