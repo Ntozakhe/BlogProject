@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BlogProjectPrac7.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class RedoDb : Migration
+    public partial class tryAgain : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -24,7 +24,7 @@ builder.Services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.R
 builder.Services.AddControllersWithViews();
 
 //Custom Service
-builder.Services.AddScoped<DataService>();
+//builder.Services.AddScoped<DataService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddScoped<IBlogEmailSender, EmailService>();
@@ -36,14 +36,14 @@ var app = builder.Build();
 
 
 // Resolve DataService and run initialization ManageDataAsync()
-using (var scope = app.Services.CreateScope())
-{
-    //DataService
-    var serviceProvider = scope.ServiceProvider;
-    var dataService = serviceProvider.GetRequiredService<DataService>();
-    await dataService.ManageDataAsync();
-    await DataHelper.ManageDataAsync(scope.ServiceProvider);
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    //DataService
+//    var serviceProvider = scope.ServiceProvider;
+//    var dataService = serviceProvider.GetRequiredService<DataService>();
+//    await dataService.ManageDataAsync();
+//    await DataHelper.ManageDataAsync(scope.ServiceProvider);
+//}
 
 
 
