@@ -1,4 +1,5 @@
 using BlogProjectPrac7.Data;
+using BlogProjectPrac7.Helpers;
 using BlogProjectPrac7.Models;
 using BlogProjectPrac7.Models.ViewModel;
 using BlogProjectPrac7.Services;
@@ -8,11 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
+var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(DataUtility.GetConnectionString(builder.Configuration),
-    prop => prop.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+    options.UseNpgsql(connectionString));
 
 //builder.Services.AddDefaultIdentity<BlogUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -36,12 +36,17 @@ var app = builder.Build();
 
 
 
-using (var scope = app.Services.CreateScope())
-{
-    var serviceProvider = scope.ServiceProvider;
-    var dataService = serviceProvider.GetRequiredService<DataService>();
-    await dataService.ManageDataAsync();
-}
+var scope = app.Services.CreateScope();
+await DataHelper.ManageDataAsync(scope.ServiceProvider);
+
+//pull out registered DataService
+var dataService = app.Services
+                     .CreateScope().ServiceProvider
+                     .GetRequiredService<DataService>();
+
+await dataService.ManageDataAsync();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

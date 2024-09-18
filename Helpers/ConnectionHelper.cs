@@ -1,26 +1,22 @@
 ﻿using Npgsql;
 
-namespace BlogProjectPrac7.Data
+namespace BlogProjectPrac7.Helpers
 {
-    public static class DataUtility
+    public class ConnectionHelper
     {
         public static string GetConnectionString(IConfiguration configuration)
         {
-            //This goes and looks locally
-            //var connectionString = configuration.GetSection("pgSettings")["pgConnection"];
+            //var connectionString = configuration.GetConnectionString("DefaultConnection");
             var connectionString = configuration.GetSection("pgSettings")["pgConnection"];
-
-            //This goes to the outside db
             var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-
             return string.IsNullOrEmpty(databaseUrl) ? connectionString : BuildConnectionString(databaseUrl);
         }
-        public static string BuildConnectionString(string databaseUrl)
+
+        //build the connection string from the environment. i.e. Heroku
+        private static string BuildConnectionString(string databaseUrl)
         {
-            //Provides an object representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
             var databaseUri = new Uri(databaseUrl);
             var userInfo = databaseUri.UserInfo.Split(':');
-            //Provides a simple way to create and manage the contents of connection strings used by the NpgsqlConnection class.
             var builder = new NpgsqlConnectionStringBuilder
             {
                 Host = databaseUri.Host,
@@ -28,7 +24,7 @@ namespace BlogProjectPrac7.Data
                 Username = userInfo[0],
                 Password = userInfo[1],
                 Database = databaseUri.LocalPath.TrimStart('/'),
-                SslMode = SslMode.Prefer,
+                SslMode = SslMode.Require,
                 TrustServerCertificate = true
             };
             return builder.ToString();
