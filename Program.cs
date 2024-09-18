@@ -35,16 +35,16 @@ builder.Services.AddScoped<ISlugService, BasicSlugService>();
 var app = builder.Build();
 
 
+// Resolve DataService and run initialization ManageDataAsync()
+using (var scope = app.Services.CreateScope())
+{
+    //DataService
+    var serviceProvider = scope.ServiceProvider;
+    var dataService = serviceProvider.GetRequiredService<DataService>();
+    await dataService.ManageDataAsync();
+    await DataHelper.ManageDataAsync(scope.ServiceProvider);
+}
 
-var scope = app.Services.CreateScope();
-await DataHelper.ManageDataAsync(scope.ServiceProvider);
-
-//pull out registered DataService
-var dataService = app.Services
-                     .CreateScope().ServiceProvider
-                     .GetRequiredService<DataService>();
-
-await dataService.ManageDataAsync();
 
 
 
